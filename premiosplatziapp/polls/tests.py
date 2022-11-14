@@ -46,7 +46,7 @@ class QuestionIndexViewTests(TestCase):
 
         
     def test_past_question_no_displayed(self):
-        """If created the question with pub_date in in the past, this question displayed"""
+        """If created the question with pub_date is in the past, this question displayed"""
         question = create_question("past question",days=-10)
         response = self.client.get(reverse("polls:index"))
         self.assertQuerysetEqual(response.context["latest_question_list"],[question] )
@@ -71,6 +71,24 @@ class QuestionDetailViewTests(TestCase):
         url = reverse("polls:detail",args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+
+class QuestionResultsViewTests(TestCase):
+    #def test_future_question_no_displayed(self):
+    #    """If exist the question with pub_date is in the future, this question no displayed"""
+    #    future_question = create_question("future question",days=30)
+    #    url = reverse("polls:results",args=[future_question.id,])
+    #    response = self.client.get(url)
+    #    self.assertEqual(response.status_code, 404)
+
+
+        
+    def test_past_question_displayed(self):
+        """If exist the question with pub_date is in the past, this question displayed"""
+        past_question = create_question("past question",days=-10)
+        url = reverse("polls:results",args=(past_question.id,))
+        response = self.client.get(url)
+        self.assertContains(response, past_question.question_text)
+
 
         
 
